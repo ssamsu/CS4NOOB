@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {{ detail.title }} | {{ block.super }}
+{% endblock title %}
+
+{% block content %}
+      <div class='col-sm-8 col-sm-offset-2 thumbnail'>
+          {% if user.is_authenticated %}
+            [<a href="{% url 'posts:update' slug=detail.slug %}">EDIT</a>]
+            [<a href="{% url 'posts:delete' slug=detail.slug %}" onclick="return confirm('Do you really want to delete the post?');">DELETE</a>]
+          {% endif %}
+          {% if detail.image %}
+            <img src="{{ detail.image.url }}" class="img-responsive">
+          {% endif %}
+          <h2>{{ detail.title }} <small> {% if detail.draft %} <span style="color:red;font-weight:bold;">DRAFT</span>{% endif %} {{ detail.created }}</small></h2>
+          {% if detail.user.get_full_name %}
+          - {{ detail.user.get_full_name }}
+          {% elif detail.user %}
+          - {{ detail.user }}
+          {% endif %}
+          </br>
+          </br>
+          <div class="fb-like" data-href="{{ request.build_absolute_uri }}" data-layout="button_count" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
+          <hr/>
+          <div class="post-reponse">{{ detail.content }}</div>
+          <hr/>
+          <div class="fb-comments" data-href="{{ request.build_absolute_uri }}" data-width="100%" data-numposts="5" data-colorscheme="light"></div>
+          </div>
+{% endblock content %}

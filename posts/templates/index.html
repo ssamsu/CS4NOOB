@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %} Home Page | {{ block.super }} {% endblock title %}
+
+{% block content %}
+    <div class='col-sm-8 col-sm-offset-2'>
+    {% if object_list %}
+        {% for obj in object_list %}
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="thumbnail">
+                {% if obj.image %}
+                  <a href='{% url "posts:detail" slug=obj.slug %}'><img src="{{ obj.image.url }}" class="img-responsive"></a>
+                {% endif %}
+                <div class="caption">
+                  <h3><a href='{% url "posts:detail" slug=obj.slug %}' style="text-decoration: none;">{{ obj.title }}</a> <small> {% if obj.draft %} <span style="color:red;font-weight:bold;">DRAFT</span>{% endif %} {{ obj.created|timesince }} ago</small></h3>
+                  {% if obj.user.get_full_name %}
+                    <small>- {{ obj.user.get_full_name }}</small>
+                  {% elif obj.user %}
+                    <small>- {{ obj.user }}</small>
+                  {% endif %}
+                  <div class="tags">
+                    {% for cat in obj.category.all %}
+                          <a href="{% url 'posts:home' %}?tag={{ cat }}"><span>{{ cat|upper }}</span></a>
+                    {% endfor %}
+                  </div>
+                  <hr/>
+                  <div class="post-reponse"><p>{{ obj.content|truncatewords:20 }}</p></div>
+                  <p><a href='{% url "posts:detail" slug=obj.slug %}' class="btn btn-primary" role="button">View</a></p>
+                </div>
+              </div>
+            </div>
+            <hr/>
+          </div>
+        {% endfor %}
+        <div class="pagination">
+          <span class="step-links">
+              {% if object_list.has_previous %}
+                  <a href="?{{ page_request_var }}={{ object_list.previous_page_number }}{% if request.GET.q %}&q={{request.GET.q}}{% endif %}">previous</a>
+              {% endif %}
+              <span class="current">
+                  Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.
+              </span>
+              {% if object_list.has_next %}
+                  <a href="?{{ page_request_var }}={{ object_list.next_page_number }}{% if request.GET.q %}&q={{request.GET.q}}{% endif %}">next</a>
+              {% endif %}
+          </span>
+        </div>
+    {% else %}
+      <h3>No Post<h3>
+    {% endif %}
+    </div>
+{% endblock content %}
+
+{% block extra_script %}
+      if(location.pathname == "{% url 'posts:home' %}"){
+        $("#home").addClass("active");
+        $("#home span").attr("style","font-weight:bold !important;");
+      }
+  {% if user.is_authenticated %}
+      if(location.pathname == "{% url 'posts:drafts' %}"){
+        $("#drafts").addClass("active");
+        $("#drafts span").attr("style","font-weight:bold !important;");
+      }
+  {% endif %}
+{% endblock extra_script %}

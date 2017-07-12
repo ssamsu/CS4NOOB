@@ -1,0 +1,11 @@
+[run]
+omit =
+ *apps.py,
+ *__init__.py,
+ *migrations/*,
+ *settings*,
+ *tests/*,
+ *urls.py,
+ *wsgi.py,
+ manage.py,
+ aws_storage_classes.py

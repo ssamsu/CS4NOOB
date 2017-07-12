@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block title %}
+  Contact Page | {{ block.super }}
+{% endblock title %}
+
+{% block content %}
+  {% if form %}
+  <div class="col-md-6 col-sm-offset-3">
+    <br/>
+    <p>Hi there!</p>
+    <p>Here you can send us message, suggest a topic you want to read about, inform us in case you've found a bug/error, or simply say hello. Anything, really! :D</p>
+  <br/>
+    <form method="POST">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <input type="submit" value="SEND" />
+    </form>
+  </div>
+  {% elif message %}
+    <h2 style="text-align: center;">{{ message }}</h2>
+  {% endif %}
+{% endblock content %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %} About Page | {{ block.super }} {% endblock title %}
+
+{% block content %}
+    <div class='col-sm-8 col-sm-offset-2 thumbnail'>
+           <div class="col-lg-2 col-xs-pull-*">
+             <img id="profile" src="{% static 'posts/img/Samsu.PNG' %}" alt="Syed Shamsudheen">
+           </div>
+           <div class="col-lg-10 col-xs-push-*">
+             <p class="name" style="font-size:x-large;"><strong>Syed Shamsudheen</strong></p>
+             <p class="bio">I'm a passionate software developer and security researcher from India, currently living in New Zealand. I did my Master of Professional Studies in Digital Security at University of Auckland. I develop application on a weekly basis using C, C++, Python and more. If you have any questions, please fell free to contact me! :)</p>
+             <p class="contact">
+               <a href="https://linkedin.com/in/syed-shamsudheen-39229a84" title="LinkedIn"><i class="fa fa-linkedin"></i></a>&nbsp;
+               <a href="https://facebook.com/syed.samsu" title="Facebook"><i class="fa fa-facebook-official"></i></a>&nbsp;
+               <a href="{% url 'posts:contact' %}" title="Contact"><i class="fa fa-envelope"></i></a>
+             </p>
+           </div>
+      </div>
+{% endblock content %}
+
+{% block extra_script %}
+      if(location.pathname == "{% url 'posts:about' %}"){
+        $("#about").addClass("active");
+        $("#about span").attr("style","font-weight:bold !important;");
+      }
+
+      if($(document).width() < 768){
+        $("#profile").attr("width","100%");
+      }
+{% endblock extra_script %}

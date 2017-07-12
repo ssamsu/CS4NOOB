@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block title %}
+  Create Page | {{ block.super }}
+{% endblock title %}
+
+<!-- loading pagedown required javascript and css files -->
+{% block extra_head %}
+  {{ form.media }}
+  <style>
+    .wmd-panel{
+      margin-right: 0px !important;
+      margin-left: 0px !important;
+    }
+  </style>
+{% endblock extra_head %}
+
+{% block content %}
+  <div class='col-sm-6'>
+    <h3>PREVIEW</h3>
+    <hr/>
+    <div class='content-preview'>
+      <h1 id='preview-title'></h3>
+      <p id='preview-content'></p>
+    </div>
+  </div>
+  <div class='col-sm-6'>
+    <h3>EDIT</h3>
+    <hr/>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <input type="submit" value="Create Post" />
+    </form>
+  </div>
+{% endblock content %}
+
+{% block extra_script %}
+  {% if user.is_authenticated %}
+      if(location.pathname == "{% url 'posts:create' %}"){
+        $("#create").addClass("active");
+        $("#create span").attr("style","font-weight:bold !important;");
+      }
+  {% endif %}
+      var contentInput = $("#id_content");
+
+       function setContent(value){
+           var markedContent = marked(value)
+           $("#preview-content").html(markedContent)
+           $("#preview-content img").each(function(){
+               $(this).addClass("img-responsive")
+           })
+       }
+       setContent(contentInput.val())
+
+       contentInput.keyup(function(){
+           var newContent = $(this).val()
+           setContent(newContent)
+       })
+       var titleInput = $("#id_title");
+
+       function setTitle(value) {
+           $("#preview-title").text(value)
+       }
+       setTitle(titleInput.val())
+
+       titleInput.keyup(function(){
+           var newContent = $(this).val()
+           setTitle(newContent)
+       })
+{% endblock extra_script %}
